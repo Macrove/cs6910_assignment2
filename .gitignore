@@ -1,3 +1,4 @@
 */dataset
-
 *.ipynb
+lightning_logs
+**/__pycache__
