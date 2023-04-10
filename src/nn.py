@@ -7,39 +7,51 @@ from tqdm import tqdm
 # Creating a CNN class
 class ConvNeuralNet(nn.Module):
 	#  Determine what layers and their order in CNN object 
-    def __init__(self, DEVICE):
+    def __init__(self, learning_rate, epochs, activation, loss_fn, cnn_params, out_features_fc1, DEVICE):
         super(ConvNeuralNet, self).__init__()
         self.device = DEVICE
         print("Device in use: ", self.device)
 
-        self.learning_rate = 1e-2
-        self.epochs = 5
-        self.activation = nn.ReLU()
-        self.loss_fn = nn.CrossEntropyLoss()
+        self.learning_rate = learning_rate
+        self.epochs = epochs
+        self.activation = activation
+        self.loss_fn = loss_fn
+        self.cnn_params = cnn_params
 
         self.pool = nn.MaxPool2d(2, 2)
         self.cnn_stack = nn.Sequential(
-            nn.Conv2d(3, 32, 2, padding=1, device=self.device),
-            # self.activation,
+            nn.Conv2d(cnn_params[0]["in_features"], cnn_params[0]["out_features"], cnn_params[0]["kernel_size"], 
+                      cnn_params[0]["stride"], cnn_params[0]["padding"], device=self.device),
+            self.activation,
+            nn.Dropout(0.3),
             self.pool,
-            nn.Conv2d(32, 64, 2, padding=1, device=self.device),
-            # self.activation,
+            nn.Conv2d(cnn_params[1]["in_features"], cnn_params[1]["out_features"], cnn_params[1]["kernel_size"], 
+                      cnn_params[1]["stride"], cnn_params[1]["padding"], device=self.device),
+            self.activation,
+            nn.Dropout(0.3),
             self.pool,
-            nn.Conv2d(64, 128, 2, padding=1, device=self.device),
-            # self.activation,
+            nn.Conv2d(cnn_params[2]["in_features"], cnn_params[2]["out_features"], cnn_params[2]["kernel_size"], 
+                      cnn_params[2]["stride"], cnn_params[2]["padding"], device=self.device),
+            self.activation,
+            nn.Dropout(0.3),
             self.pool,
-            nn.Conv2d(128, 256, 2, padding=1, device=self.device),
-            # self.activation,
+            nn.Conv2d(cnn_params[3]["in_features"], cnn_params[3]["out_features"], cnn_params[3]["kernel_size"], 
+                      cnn_params[3]["stride"], cnn_params[3]["padding"], device=self.device),
+            self.activation,
+            nn.Dropout(0.3),
             self.pool,
-            nn.Conv2d(256, 512, 2, padding=1, device=self.device),
-            # self.activation,
+            nn.Conv2d(cnn_params[4]["in_features"], cnn_params[4]["out_features"], cnn_params[4]["kernel_size"], 
+                      cnn_params[4]["stride"], cnn_params[4]["padding"], device=self.device),
+            self.activation,
+            nn.Dropout(0.3),
             self.pool,
         )
         self.fc_stack = nn.Sequential(
-            nn.Linear(512 * 8 * 8, 1024).to(self.device),
+            nn.Linear(cnn_params[4]["out_features"] * 8 * 8, out_features_fc1).to(self.device),
+            nn.Dropout(0.3),
             self.activation,
-            nn.Linear(1024, 10).to(self.device),
-            self.activation
+            nn.Linear(out_features_fc1, 10).to(self.device),
+            nn.Softmax(-1)
         )
         self.cnn_stack.to(device=self.device)
         self.fc_stack.to(device=self.device)
@@ -53,7 +65,7 @@ class ConvNeuralNet(nn.Module):
         # x = F.adaptive_avg_pool2d(x, 1).reshape(batch_size, -1)
         # x = x.reshape(batch_size, -1)
         # print(x.shape)
-        x = x.view(-1, 512*8*8)
+        x = x.view(-1, self.cnn_params[4]["out_features"] * 8 * 8)
         # print(x.shape)
         x = self.fc_stack(x)
         return x
