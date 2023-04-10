@@ -1,11 +1,12 @@
 import torch.nn as nn
 import torch
-import torch.nn.functional as F
 import torch.optim as optim
 from tqdm import tqdm
+import wandb
+from utils.maps import activation_map, loss_map
 
 class ConvNeuralNet(nn.Module):
-    def __init__(self, learning_rate, epochs, activation, loss_fn, cnn_params, out_features_fc1, DEVICE):
+    def __init__(self, cnn_params, out_features_fc1, dropout, loss, learning_rate, optimizer, activation, epochs, DEVICE, use_wandb):
         
         super(ConvNeuralNet, self).__init__()
 
@@ -14,41 +15,38 @@ class ConvNeuralNet(nn.Module):
 
         self.learning_rate = learning_rate
         self.epochs = epochs
-        self.activation = activation
-        self.loss_fn = loss_fn
+        self.activation = activation_map[activation]
+        self.loss_fn = loss_map[loss]
         self.cnn_params = cnn_params
+        self.dropout = dropout
+        self.use_wandb = use_wandb
 
         self.pool = nn.MaxPool2d(2, 2)
         self.cnn_stack = nn.Sequential(
             nn.Conv2d(cnn_params[0]["in_features"], cnn_params[0]["out_features"], cnn_params[0]["kernel_size"], 
                       cnn_params[0]["stride"], cnn_params[0]["padding"], device=self.device),
             self.activation,
-            nn.Dropout(0.3),
             self.pool,
             nn.Conv2d(cnn_params[1]["in_features"], cnn_params[1]["out_features"], cnn_params[1]["kernel_size"], 
                       cnn_params[1]["stride"], cnn_params[1]["padding"], device=self.device),
             self.activation,
-            nn.Dropout(0.3),
             self.pool,
             nn.Conv2d(cnn_params[2]["in_features"], cnn_params[2]["out_features"], cnn_params[2]["kernel_size"], 
                       cnn_params[2]["stride"], cnn_params[2]["padding"], device=self.device),
             self.activation,
-            nn.Dropout(0.3),
             self.pool,
             nn.Conv2d(cnn_params[3]["in_features"], cnn_params[3]["out_features"], cnn_params[3]["kernel_size"], 
                       cnn_params[3]["stride"], cnn_params[3]["padding"], device=self.device),
             self.activation,
-            nn.Dropout(0.3),
             self.pool,
             nn.Conv2d(cnn_params[4]["in_features"], cnn_params[4]["out_features"], cnn_params[4]["kernel_size"], 
                       cnn_params[4]["stride"], cnn_params[4]["padding"], device=self.device),
             self.activation,
-            nn.Dropout(0.3),
             self.pool,
         )
         self.fc_stack = nn.Sequential(
             nn.Linear(cnn_params[4]["out_features"] * 8 * 8, out_features_fc1).to(self.device),
-            nn.Dropout(0.3),
+            nn.Dropout(self.dropout),
             self.activation,
             nn.Linear(out_features_fc1, 10).to(self.device),
             nn.Softmax(-1)
@@ -61,12 +59,7 @@ class ConvNeuralNet(nn.Module):
         
     def forward(self, x):
         x = self.cnn_stack(x)
-        # batch_size = x.shape[0]
-        # x = F.adaptive_avg_pool2d(x, 1).reshape(batch_size, -1)
-        # x = x.reshape(batch_size, -1)
-        # print(x.shape)
         x = x.view(-1, self.cnn_params[4]["out_features"] * 8 * 8)
-        # print(x.shape)
         x = self.fc_stack(x)
         return x
 
@@ -80,9 +73,16 @@ class ConvNeuralNet(nn.Module):
         for epoch in range(self.epochs):
             print(f"[INFO]: Epoch {epoch+1} of {epoch}")
             train_epoch_loss, train_epoch_acc = self.train_loop(train_loader)
-            valid_epoch_loss, valid_epoch_acc = self.validate_loop(val_loader)
+            val_epoch_loss, val_epoch_acc = self.validate_loop(val_loader)
             print(f"Training loss: {train_epoch_loss:.3f}, training acc: {train_epoch_acc:.3f} %")
-            print(f"Validation loss: {valid_epoch_loss:.3f}, validation acc: {valid_epoch_acc:.3f} %")
+            print(f"Validation loss: {val_epoch_loss:.3f}, validation acc: {val_epoch_acc:.3f} %")
+            if self.use_wandb:
+                wandb.log({
+                    "train_acc" : train_epoch_acc,
+                    "val_acc" : val_epoch_acc,
+                    "train_loss" : train_epoch_loss,
+                    "val_loss" : val_epoch_loss
+                })
             print('_________________________________________________')
 
         print('TRAINING COMPLETE')
