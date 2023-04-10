@@ -4,11 +4,11 @@ import torch.nn.functional as F
 import torch.optim as optim
 from tqdm import tqdm
 
-# Creating a CNN class
 class ConvNeuralNet(nn.Module):
-	#  Determine what layers and their order in CNN object 
     def __init__(self, learning_rate, epochs, activation, loss_fn, cnn_params, out_features_fc1, DEVICE):
+        
         super(ConvNeuralNet, self).__init__()
+
         self.device = DEVICE
         print("Device in use: ", self.device)
 

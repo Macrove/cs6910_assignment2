@@ -1,3 +1,4 @@
+from collections import Counter
 from torchvision.datasets import ImageFolder
 from torch.utils.data import DataLoader, random_split
 import os
@@ -42,9 +43,16 @@ train_split, val_split = random_split(train_dataset, [0.8, 0.2])
 print("\nTrain samples:\t", len(train_split))
 print("Validation samples:\t", len(val_split)) 
 print("Test samples:\t", len(test_dataset)) 
-print("\nImage Size:\t", train_split[0][0].shape )
+print("\nImage Size:\t", train_split[0][0].shape)
 
-print("\nLabels: ", train_dataset.classes)
+labels = train_dataset.classes
+
+value_counts = Counter(train_dataset.targets)
+
+print("\nTraining Sample Distribution")
+for i in range(10):
+    print(labels[i], " : ", value_counts[i])
+print('\n')
 
 train_loader = DataLoader(train_split, 8, shuffle=True, num_workers=8, pin_memory=True)
 val_loader = DataLoader(val_split, 8, shuffle=True, num_workers=8, pin_memory=True)
