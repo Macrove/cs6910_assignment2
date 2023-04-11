@@ -53,7 +53,6 @@ loss = args.loss
 lr = args.lr
 kernel_size = args.kernel_size
 stride = args.stride
-padding = args.padding
 batch_normalisation = args.batch_normalisation
 
 if use_wandb:
@@ -72,11 +71,10 @@ if use_wandb:
         "optimizer" : optimizer["name"],
         "kernel_size" : kernel_size,
         "stride"  : stride,
-        "padding" : padding,
         "batch_normalisation" : batch_normalisation
     })
     run.log_code()
 
 if __name__ == '__main__':
-    cnn_params = get_cnn_params(n_filters, filter_organisation, kernel_size, stride, padding)
+    cnn_params = get_cnn_params(n_filters, filter_organisation, kernel_size, stride)
     main(epochs, activation, cnn_params, linear_fc_out_features, dropout, loss, lr, optimizer, batch_normalisation, use_wandb)

@@ -27,10 +27,10 @@ optimizer_param_map = {
         "name": "SGD",
         "default_params": dict(
             lr = 0.01,
-            momentum= 0.5,
-            dampening= 0.1,
-            weight_decay= 1e-3,
-            nestrov= True
+            momentum= 0.7,
+            # dampening= 0.1,
+            # weight_decay= 1e-3,
+            # nestrov= True
         )
     },
     "Adam" : {

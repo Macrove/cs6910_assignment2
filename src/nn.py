@@ -34,12 +34,14 @@ class ConvNeuralNet(nn.Module):
         self.cnn_stack.to(device=self.device)
         self.fc_stack.to(device=self.device)
 
+        print(optimizer_params)
         if optimizer == "SGD":
             self.optimizer = optim.SGD(self.parameters(), **optimizer_params)
         elif optimizer == "Adam":
             self.optimizer = optim.Adam(self.parameters(), **optimizer_params)
 
     def prepare_layers(self):
+        print(self.cnn_params)
         cnn_layers = []
         for i in range(5):
             cnn_layers.append(
@@ -99,6 +101,9 @@ class ConvNeuralNet(nn.Module):
             print('_________________________________________________')
 
         print('TRAINING COMPLETE')
+        if train_epoch_acc > 30 and val_epoch_acc > 30:
+            print("Training and Validation accuracies are greater than 30%.\nSaving model parameters")
+            torch.save(self.state_dict(), "train_{}_test_{}.pth".format(train_epoch_acc, val_epoch_acc))
 
     def train_loop(self, trainloader):
         self.train()
