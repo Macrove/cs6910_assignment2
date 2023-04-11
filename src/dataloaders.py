@@ -16,24 +16,16 @@ test_dataset_path = os.path.join(dataset_path, "val")
 # the training transforms
 train_transform = transforms.Compose([
     transforms.Resize((256, 256)),
+    transforms.RandomRotation(degrees=(40, 75)),
+    transforms.GaussianBlur(kernel_size=(5, 5), sigma=(0.1, 5)),
     transforms.RandomHorizontalFlip(p=0.5),
     transforms.RandomVerticalFlip(p=0.5),
-    transforms.GaussianBlur(kernel_size=(5, 9), sigma=(0.1, 5)),
-    transforms.RandomRotation(degrees=(30, 70)),
     transforms.ToTensor(),
-    transforms.Normalize(
-        mean=[0.5, 0.5, 0.5],
-        std=[0.5, 0.5, 0.5]
-    )
 ])
 # the test transforms
 test_transform = transforms.Compose([
     transforms.Resize((256, 256)),
     transforms.ToTensor(),
-    transforms.Normalize(
-        mean=[0.5, 0.5, 0.5],
-        std=[0.5, 0.5, 0.5]
-    )
 ])
 train_dataset = ImageFolder(train_dataset_path, transform=train_transform)
 test_dataset = ImageFolder(test_dataset_path, transform=test_transform)
