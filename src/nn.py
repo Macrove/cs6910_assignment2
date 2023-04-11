@@ -20,48 +20,52 @@ class ConvNeuralNet(nn.Module):
         self.cnn_params = cnn_params
         self.dropout = dropout
         self.batch_normalisation = batch_normalisation
-        self.batch_norm = nn.BatchNorm2d(3)
         self.use_wandb = use_wandb
+        self.out_features_fc1 = out_features_fc1
 
         self.pool = nn.MaxPool2d(2, 2)
-        self.cnn_stack = nn.Sequential(
-            nn.Conv2d(cnn_params[0]["in_features"], cnn_params[0]["out_features"], cnn_params[0]["kernel_size"], 
-                      cnn_params[0]["stride"], cnn_params[0]["padding"], device=self.device),
-            self.activation,
-            self.pool,
-            nn.Conv2d(cnn_params[1]["in_features"], cnn_params[1]["out_features"], cnn_params[1]["kernel_size"], 
-                      cnn_params[1]["stride"], cnn_params[1]["padding"], device=self.device),
-            self.activation,
-            self.pool,
-            nn.Conv2d(cnn_params[2]["in_features"], cnn_params[2]["out_features"], cnn_params[2]["kernel_size"], 
-                      cnn_params[2]["stride"], cnn_params[2]["padding"], device=self.device),
-            self.activation,
-            self.pool,
-            nn.Conv2d(cnn_params[3]["in_features"], cnn_params[3]["out_features"], cnn_params[3]["kernel_size"], 
-                      cnn_params[3]["stride"], cnn_params[3]["padding"], device=self.device),
-            self.activation,
-            self.pool,
-            nn.Conv2d(cnn_params[4]["in_features"], cnn_params[4]["out_features"], cnn_params[4]["kernel_size"], 
-                      cnn_params[4]["stride"], cnn_params[4]["padding"], device=self.device),
-            self.activation,
-            self.pool,
-        )
-        self.fc_stack = nn.Sequential(
-            nn.Linear(cnn_params[4]["out_features"] * 8 * 8, out_features_fc1).to(self.device),
-            nn.Dropout(self.dropout),
-            self.activation,
-            nn.Linear(out_features_fc1, 10).to(self.device),
-            nn.Softmax(-1)
-        )
+
+        cnn_layers, fc_layers = self.prepare_layers()
+        self.cnn_stack = nn.Sequential(*cnn_layers)
+        self.fc_stack = nn.Sequential(*fc_layers)
+
         self.cnn_stack.to(device=self.device)
         self.fc_stack.to(device=self.device)
-        # self.optimizer = optim.Adam(self.parameters(), self.learning_rate, betas=(0.7, 0.7))
+
         self.optimizer = optim.SGD(self.parameters(), self.learning_rate)
 
+    def prepare_layers(self):
+        cnn_layers = []
+        for i in range(5):
+            cnn_layers.append(
+                nn.Conv2d(self.cnn_params[i]["in_features"], self.cnn_params[i]["out_features"], self.cnn_params[i]["kernel_size"], 
+                    self.cnn_params[i]["stride"], self.cnn_params[i]["padding"])
+            )
+            cnn_layers.append(self.activation)
+            if self.batch_normalisation:
+                cnn_layers.append(nn.BatchNorm2d(self.cnn_params[i]["out_features"]))
+            cnn_layers.append(self.pool)
+
+        fc_layers = []
+        fc_layers.append(
+            nn.Linear(self.cnn_params[4]["out_features"] * 8 * 8, self.out_features_fc1),
+        )
+        if self.batch_normalisation:
+            fc_layers.append(
+                nn.BatchNorm1d(self.out_features_fc1),
+            )
+        if self.dropout:
+            fc_layers.append(
+                nn.Dropout(self.dropout),
+            )
+        fc_layers.extend([
+            self.activation,
+            nn.Linear(self.out_features_fc1, 10),
+            nn.Softmax(-1)
+        ])
+        return cnn_layers, fc_layers
         
     def forward(self, x):
-        if self.batch_normalisation:
-            x = self.batch_norm(x)
         x = self.cnn_stack(x)
         x = x.view(-1, self.cnn_params[4]["out_features"] * 8 * 8)
         x = self.fc_stack(x)
@@ -96,7 +100,7 @@ class ConvNeuralNet(nn.Module):
         print('Training')
         net_loss = 0
         true_pos = 0
-        for i, data in tqdm(enumerate(trainloader), total=len(trainloader), mininterval=0.5):
+        for i, data in tqdm(enumerate(trainloader), total=len(trainloader)):
             image, labels = data
             image = image.to(self.device)
             labels = labels.to(self.device)

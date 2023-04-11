@@ -21,11 +21,19 @@ train_transform = transforms.Compose([
     transforms.RandomHorizontalFlip(p=0.5),
     transforms.RandomVerticalFlip(p=0.5),
     transforms.ToTensor(),
+    transforms.Normalize(
+        mean=[0.5, 0.5, 0.5],
+        std=[0.5, 0.5, 0.5]
+    )
 ])
 # the test transforms
 test_transform = transforms.Compose([
     transforms.Resize((256, 256)),
     transforms.ToTensor(),
+    transforms.Normalize(
+        mean=[0.5, 0.5, 0.5],
+        std=[0.5, 0.5, 0.5]
+    )
 ])
 train_dataset = ImageFolder(train_dataset_path, transform=train_transform)
 test_dataset = ImageFolder(test_dataset_path, transform=test_transform)

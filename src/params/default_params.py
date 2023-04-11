@@ -1,6 +1,6 @@
 default_model_params = {
     "optimizer" : "sgd",
-    "epochs" : 5,
+    "epochs" : 40,
     "linear_fc_out_features" : 1024,
     "activation" : "ReLU",
     "loss": "cross_entropy",
