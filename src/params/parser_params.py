@@ -5,5 +5,7 @@ parser_choices = {
     "loss": ["cross_entropy"],
     "optimizer": ["sgd"],
     "activation": [fn for fn in activation_map.keys()],
-    "filter_organisation": [0, 1, 2]
+    "filter_organisation": [0, 1, 2],
+    "use_wandb": [0, 1],
+    "batch_normalisation": [0, 1]
 }

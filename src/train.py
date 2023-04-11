@@ -32,7 +32,8 @@ parser.add_argument("-beta2", "--beta2", default=optimizer_param_map["nadam"]["d
 parser.add_argument("-eps", "--epsilon", default=optimizer_param_map["nadam"]["default_params"]["epsilon"], type=float)
 parser.add_argument("-sz", "--linear_fc_out_features", default=default_model_params["linear_fc_out_features"], type=int)
 parser.add_argument("-a", "--activation", choices=parser_choices["activation"], default=default_model_params["activation"])
-parser.add_argument("-wb", "--use_wandb", choices=[0, 1], default=default_use_wandb, type=int)
+parser.add_argument("-wb", "--use_wandb", choices=parser_choices["use_wandb"], default=default_use_wandb, type=int)
+parser.add_argument("-bn", "--batch_normalisation", choices=parser_choices["batch_normalisation"], default=default_model_params["batch_normalisation"], type=int)
 args = parser.parse_args()
 
 optimizer = optimizer_param_map[args.optimizer]
@@ -52,6 +53,7 @@ learning_rate = args.learning_rate
 kernel_size = args.kernel_size
 stride = args.stride
 padding = args.padding
+batch_normalisation = args.batch_normalisation
 
 if use_wandb:
     run = wandb.init(project=args.wandb_project, entity=args.wandb_entity)
@@ -69,10 +71,11 @@ if use_wandb:
         optimizer: optimizer["name"],
         kernel_size: kernel_size,
         stride : stride,
-        padding: padding
+        padding: padding,
+        batch_normalisation: batch_normalisation
     })
     run.log_code()
 
 if __name__ == '__main__':
     cnn_params = get_cnn_params(n_filters, filter_organisation, kernel_size, stride, padding)
-    main(epochs, activation, cnn_params, linear_fc_out_features, dropout, loss, learning_rate, optimizer, use_wandb)
+    main(epochs, activation, cnn_params, linear_fc_out_features, dropout, loss, learning_rate, optimizer, batch_normalisation, use_wandb)

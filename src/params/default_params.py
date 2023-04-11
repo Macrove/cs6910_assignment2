@@ -9,7 +9,8 @@ default_model_params = {
     "dropout": 0.1,
     "kernel_size": 2,
     "stride": 1,
-    "padding": 1
+    "padding": 1,
+    "batch_normalisation": 1
 }
 
 default_use_wandb = False

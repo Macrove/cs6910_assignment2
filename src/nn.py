@@ -6,7 +6,7 @@ import wandb
 from utils.maps import activation_map, loss_map
 
 class ConvNeuralNet(nn.Module):
-    def __init__(self, cnn_params, out_features_fc1, dropout, loss, learning_rate, optimizer, activation, epochs, DEVICE, use_wandb):
+    def __init__(self, cnn_params, out_features_fc1, dropout, loss, learning_rate, optimizer, activation, epochs, batch_normalisation, DEVICE, use_wandb):
         
         super(ConvNeuralNet, self).__init__()
 
@@ -19,6 +19,8 @@ class ConvNeuralNet(nn.Module):
         self.loss_fn = loss_map[loss]
         self.cnn_params = cnn_params
         self.dropout = dropout
+        self.batch_normalisation = batch_normalisation
+        self.batch_norm = nn.BatchNorm2d(3)
         self.use_wandb = use_wandb
 
         self.pool = nn.MaxPool2d(2, 2)
@@ -58,6 +60,8 @@ class ConvNeuralNet(nn.Module):
 
         
     def forward(self, x):
+        if self.batch_normalisation:
+            x = self.batch_norm(x)
         x = self.cnn_stack(x)
         x = x.view(-1, self.cnn_params[4]["out_features"] * 8 * 8)
         x = self.fc_stack(x)
