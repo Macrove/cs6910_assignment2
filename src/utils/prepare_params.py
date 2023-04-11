@@ -3,6 +3,8 @@ def get_cnn_params(n_filters:int, filter_organisation:int, kernel_size:int, stri
     cnn_params = []
 
     if n_filters < 32 and filter_organisation == 2:
+        print("**********NOTE**************\nToo small filter size for \
+              given filter organisation. Therefore changing filter organisation to 0")
         filter_organisation = 0
         
     cnn_params.append({
