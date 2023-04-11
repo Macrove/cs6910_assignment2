@@ -1,4 +1,5 @@
 import torch.nn as nn
+import torch.optim as optim
 activation_map = {
     "ReLU": nn.ReLU(),
     "SiLU": nn.SiLU(),

@@ -6,7 +6,9 @@ import wandb
 from utils.maps import activation_map, loss_map
 
 class ConvNeuralNet(nn.Module):
-    def __init__(self, cnn_params, out_features_fc1, dropout, loss, learning_rate, optimizer, activation, epochs, batch_normalisation, DEVICE, use_wandb):
+    def __init__(self, cnn_params, out_features_fc1, dropout, loss, learning_rate, 
+                 optimizer, optimizer_params, activation, epochs, batch_normalisation, 
+                 DEVICE, use_wandb):
         
         super(ConvNeuralNet, self).__init__()
 
@@ -32,7 +34,10 @@ class ConvNeuralNet(nn.Module):
         self.cnn_stack.to(device=self.device)
         self.fc_stack.to(device=self.device)
 
-        self.optimizer = optim.SGD(self.parameters(), self.learning_rate)
+        if optimizer == "SGD":
+            self.optimizer = optim.SGD(self.parameters(), **optimizer_params)
+        elif optimizer == "Adam":
+            self.optimizer = optim.Adam(self.parameters(), **optimizer_params)
 
     def prepare_layers(self):
         cnn_layers = []

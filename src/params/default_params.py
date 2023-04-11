@@ -1,5 +1,5 @@
 default_model_params = {
-    "optimizer" : "sgd",
+    "optimizer" : "SGD",
     "epochs" : 40,
     "linear_fc_out_features" : 1024,
     "activation" : "ReLU",
@@ -23,50 +23,22 @@ default_credentials = {
 }
 
 optimizer_param_map = {
-    "sgd" : {
-        "name": "sgd",
-        "default_params": {
-            "learning_rate" : 0.01
-        }
+    "SGD" : {
+        "name": "SGD",
+        "default_params": dict(
+            lr = 0.01,
+            momentum= 0.5,
+            dampening= 0.1,
+            weight_decay= 1e-3,
+            nestrov= True
+        )
     },
-    "momentum" : {
-        "name": "momentum",
-        "default_params": {
-            "eta" : 0.000001,
-            "gamma": 0.0000039
-        }
-    },
-    "nag" : {
-        "name": "nag",
-        "default_params": {
-            "eta" : 0.0000086,
-            "gamma": 0.0000021
-        }
-    },
-    "rmsprop" : {
-        "name": "rmsprop",
-        "default_params": {
-            "eta" : 0.00001,
-            "beta": 0.75,
-            "epsilon": 1e-10
-        }
-    },
-    "adam" : {
-        "name": "adam",
-        "default_params": {
-            "eta" : 0.00001,
-            "beta1": 0.7483,
-            "beta2": 0.7838,
-            "epsilon": 1e-9
-        }
-    },
-    "nadam" : {
-        "name": "nadam",
-        "default_params": {
-            "eta" : 0.00008,
-            "beta1": 0.7803,
-            "beta2": 0.89504,
-            "epsilon": 1e-9
-        }
+    "Adam" : {
+        "name": "Adam",
+        "default_params": dict(
+            lr= 0.00001,
+            betas= (0.9, 0.9),
+            weight_decay= 1e-3
+        )
     }
 }
