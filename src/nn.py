@@ -34,7 +34,6 @@ class ConvNeuralNet(nn.Module):
         self.cnn_stack.to(device=self.device)
         self.fc_stack.to(device=self.device)
 
-        print(optimizer_params)
         if optimizer == "SGD":
             self.optimizer = optim.SGD(self.parameters(), **optimizer_params)
         elif optimizer == "Adam":

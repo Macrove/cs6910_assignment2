@@ -9,6 +9,7 @@ def run_sweeps():
     config = wandb.config
     run.name = "epochs_{}".format(config.epochs)
 
+    config.betas = (config.beta1, config.beta2)
     optimizer = optimizer_param_map[config.optimizer]
     for key in optimizer["default_params"].keys():
         optimizer["default_params"][key] = getattr(config, str(key))
@@ -42,14 +43,14 @@ sweep_configuration = {
         'out_features_fc1': {'values': [256, 512, 1024, 2048]},
         'dropout': {'values': [0.1, 0.2, 0.3, 0.4]},
         'lr': {'values': [1e-1, 1e-2, 1e-3]},
-        'optimizer': {'values' :['SGD']},
-        # 'beta1': {'values': [0.6, 0.65, 0.70, 0.75, 0.8, 0.85, 0.9, 0.95]},
-        # 'beta2': {'values': [0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95]},
+        'optimizer': {'values' :['SGD', 'Adam']},
+        'beta1': {'values': [0.6, 0.65, 0.70, 0.75, 0.8, 0.85, 0.9, 0.95, 0.99]},
+        'beta2': {'values': [0.65, 0.7, 0.75, 0.8, 0.85, 0.9, 0.95, 0.99]},
         'momentum': {'values': [1e-1, 1e-2, 1e-3]},
         'loss': {'values': ['cross_entropy']},
         'n_filters': {'values': [32, 64, 128]},
         'filter_organisation': {'values': [0, 1, 2]},
-        'kernel_size': {'values': [2, 3, 4, 5]},
+        'kernel_size': {'values': [2, 3, 4, 5]}
     }
 }
 

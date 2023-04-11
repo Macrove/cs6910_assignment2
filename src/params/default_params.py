@@ -36,9 +36,8 @@ optimizer_param_map = {
     "Adam" : {
         "name": "Adam",
         "default_params": dict(
-            lr= 0.00001,
+            lr= 0.001,
             betas= (0.9, 0.9),
-            weight_decay= 1e-3
         )
     }
 }
