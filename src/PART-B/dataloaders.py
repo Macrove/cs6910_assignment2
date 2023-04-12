@@ -4,7 +4,9 @@ from torch.utils.data import DataLoader, random_split
 import os
 import torch
 import torchvision.transforms as transforms
-from utils.env import ZIP_DIR_PATH, EXTRACT_DIR_NAME
+ZIP_DIR_PATH = "./src/dataset/"
+ZIP_FILE_NAME = "nature_12K.zip"
+EXTRACT_DIR_NAME = "inaturalist_12K"
 
 torch.manual_seed(42)
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -15,7 +17,7 @@ test_dataset_path = os.path.join(dataset_path, "val")
 
 # the training transforms
 train_transform = transforms.Compose([
-    transforms.CenterCrop((256, 256)),
+    transforms.CenterCrop((224, 224)),
     transforms.RandomRotation(degrees=(40, 75)),
     transforms.GaussianBlur(kernel_size=(5, 5), sigma=(0.1, 5)),
     transforms.RandomHorizontalFlip(p=0.5),
@@ -28,7 +30,7 @@ train_transform = transforms.Compose([
 ])
 # the test transforms
 test_transform = transforms.Compose([
-    transforms.CenterCrop((256, 256)),
+    transforms.CenterCrop((224, 224)),
     transforms.ToTensor(),
     transforms.Normalize(
         mean=[0.5, 0.5, 0.5],

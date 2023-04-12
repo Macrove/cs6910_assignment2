@@ -85,11 +85,11 @@ class ConvNeuralNet(nn.Module):
 
     def fit(self, train_loader, val_loader):
         for epoch in range(self.epochs):
-            print(f"[INFO]: Epoch {epoch+1} of {epoch}")
+            print(f"Epoch {epoch+1} of {self.epochs}")
             train_epoch_loss, train_epoch_acc = self.train_loop(train_loader)
             val_epoch_loss, val_epoch_acc = self.validate_loop(val_loader)
-            print(f"Training loss: {train_epoch_loss:.3f}, training acc: {train_epoch_acc:.3f} %")
-            print(f"Validation loss: {val_epoch_loss:.3f}, validation acc: {val_epoch_acc:.3f} %")
+            print(f"Training loss: {train_epoch_loss:.4f}, training acc: {train_epoch_acc:.4f} %")
+            print(f"Validation loss: {val_epoch_loss:.4f}, validation acc: {val_epoch_acc:.4f} %")
             if self.use_wandb:
                 wandb.log({
                     "train_acc" : train_epoch_acc,
@@ -102,7 +102,7 @@ class ConvNeuralNet(nn.Module):
         print('TRAINING COMPLETE')
         if train_epoch_acc > 30 and val_epoch_acc > 30:
             print("Training and Validation accuracies are greater than 30%.\nSaving model parameters")
-            torch.save(self.state_dict(), "train_{}_test_{}.pth".format(train_epoch_acc, val_epoch_acc))
+            torch.save(self.state_dict(), "./saved_models/train_{train_epoch_acc:.3f}_val_{val_epoch_acc:.3f}.pth")
 
     def train_loop(self, trainloader):
         self.train()
@@ -182,3 +182,15 @@ class ConvNeuralNet(nn.Module):
         epoch_loss = net_loss / len(testloader.dataset)
         epoch_acc = 100 * (true_pos / len(testloader.dataset))
         return epoch_loss, epoch_acc
+
+    # predicts only for an instance
+    def predict(self, x):
+        self.eval()
+        print('Test')
+        with torch.no_grad():
+            image = x.to(self.device)
+            # forward pass
+            outputs = self(image)
+            _, pred = torch.max(outputs.data, -1)
+        return pred
+        

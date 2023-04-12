@@ -1,5 +1,5 @@
 default_model_params = {
-    "optimizer" : "SGD",
+    "optimizer" : "Adam",
     "epochs" : 40,
     "linear_fc_out_features" : 1024,
     "activation" : "ReLU",
@@ -13,7 +13,7 @@ default_model_params = {
     "batch_normalisation": 1
 }
 
-default_use_wandb = False
+default_use_wandb = True
 
 # default_dataset = 'fashion_mnist'
 
@@ -37,7 +37,7 @@ optimizer_param_map = {
         "name": "Adam",
         "default_params": dict(
             lr= 0.001,
-            betas= (0.9, 0.9),
+            betas= (0.9, 0.99),
         )
     }
 }

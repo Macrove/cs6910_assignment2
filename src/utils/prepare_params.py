@@ -1,4 +1,7 @@
-def get_cnn_params(n_filters:int, filter_organisation:int, kernel_size:int, stride:int = 1, padding:int = 1):
+from params.default_params import default_model_params
+
+def get_cnn_params(n_filters:int = default_model_params["n_filters"], filter_organisation:int = default_model_params["filter_organisation"],
+                   kernel_size:int = default_model_params["kernel_size"], stride:int = 1, padding:int = 1):
     padding = 1
     cnn_params = []
 
