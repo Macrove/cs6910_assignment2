@@ -1,6 +1,6 @@
 import wandb
 from main import main
-from params.default_params import optimizer_param_map
+from params.default_params import optimizer_param_map, default_model_params
 from utils.maps import activation_map
 from utils.prepare_params import get_cnn_params
 
@@ -26,7 +26,9 @@ def run_sweeps():
 
     cnn_params = get_cnn_params(n_filters, filter_organisation, kernel_size)
     
-    main(epochs, activation, cnn_params, out_features_fc1, dropout, loss, lr, optimizer, batch_normalisation=True, use_wandb=True)
+    init = default_model_params["init"]
+
+    main(epochs, activation, cnn_params, out_features_fc1, dropout, loss, lr, optimizer, batch_normalisation=True, init=init, use_wandb=True)
 
 sweep_configuration = {
     "name": "Adam Sweep",

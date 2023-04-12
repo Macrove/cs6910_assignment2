@@ -52,27 +52,28 @@ lr = args.lr
 kernel_size = args.kernel_size
 stride = args.stride
 batch_normalisation = args.batch_normalisation
+init = default_model_params["init"]
 
 if use_wandb:
     run = wandb.init(project=args.wandb_project, entity=args.wandb_entity)
     run.name = "ac_{}_opt_{}".format(args.activation, args.optimizer)
     wandb.log({
         "epochs": epochs,
-        "linear_fc_out_features" : linear_fc_out_features,
         "activation" : activation,
-        "use_wandb" : use_wandb,
+        "out_features_fc1" : linear_fc_out_features,
+        "dropout": dropout,
+        "lr": lr,
+        "optimizer" : optimizer["name"],
+        "beta1": args.betas[0],
+        "beta2": args.betas[1],
+        "momentum": args.momentum,
+        "loss" : loss,
         "n_filters" : n_filters,
         "filter_organisation" : filter_organisation,
-        "dropout" : dropout,
-        "loss" : loss,
-        "learning_rate" : lr,
-        "optimizer" : optimizer["name"],
-        "kernel_size" : kernel_size,
-        "stride"  : stride,
-        "batch_normalisation" : batch_normalisation
+        "kernel_size": kernel_size
     })
     run.log_code()
 
 if __name__ == '__main__':
     cnn_params = get_cnn_params(n_filters, filter_organisation, kernel_size, stride)
-    main(epochs, activation, cnn_params, linear_fc_out_features, dropout, loss, lr, optimizer, batch_normalisation, use_wandb)
+    main(epochs, activation, cnn_params, linear_fc_out_features, dropout, loss, lr, optimizer, batch_normalisation, init, use_wandb)

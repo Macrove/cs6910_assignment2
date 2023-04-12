@@ -1,19 +1,20 @@
 default_model_params = {
     "optimizer" : "Adam",
-    "epochs" : 40,
+    "epochs" : 10,
     "linear_fc_out_features" : 1024,
     "activation" : "ReLU",
     "loss": "cross_entropy",
     "n_filters": 32,
     "filter_organisation": 1,
-    "dropout": 0.1,
+    "dropout": 0,
     "kernel_size": 2,
     "stride": 1,
-    "padding": 1,
-    "batch_normalisation": 1
+    "padding": 0,
+    "batch_normalisation": 1,
+    "init": "xavier"
 }
 
-default_use_wandb = True
+default_use_wandb = 1
 
 # default_dataset = 'fashion_mnist'
 

@@ -15,7 +15,7 @@ test_dataset_path = os.path.join(dataset_path, "val")
 
 # the training transforms
 train_transform = transforms.Compose([
-    transforms.CenterCrop((256, 256)),
+    transforms.CenterCrop((400, 400)),
     transforms.RandomRotation(degrees=(40, 75)),
     transforms.GaussianBlur(kernel_size=(5, 5), sigma=(0.1, 5)),
     transforms.RandomHorizontalFlip(p=0.5),
@@ -28,7 +28,7 @@ train_transform = transforms.Compose([
 ])
 # the test transforms
 test_transform = transforms.Compose([
-    transforms.CenterCrop((256, 256)),
+    transforms.CenterCrop((400, 400)),
     transforms.ToTensor(),
     transforms.Normalize(
         mean=[0.5, 0.5, 0.5],
@@ -54,6 +54,6 @@ for i in range(10):
     print(labels[i], " : ", value_counts[i])
 print('\n')
 
-train_loader = DataLoader(train_split, 8, shuffle=True, num_workers=8, pin_memory=True)
+train_loader = DataLoader(train_split,8, shuffle=True, num_workers=8, pin_memory=True)
 val_loader = DataLoader(val_split, 8, shuffle=True, num_workers=8, pin_memory=True)
 test_loader = DataLoader(test_dataset, 8, num_workers=8, pin_memory=True)

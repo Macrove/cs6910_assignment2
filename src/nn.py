@@ -8,7 +8,7 @@ from utils.maps import activation_map, loss_map
 class ConvNeuralNet(nn.Module):
     def __init__(self, cnn_params, out_features_fc1, dropout, loss, learning_rate, 
                  optimizer, optimizer_params, activation, epochs, batch_normalisation, 
-                 DEVICE, use_wandb):
+                 init, DEVICE, use_wandb):
         
         super(ConvNeuralNet, self).__init__()
 
@@ -24,6 +24,7 @@ class ConvNeuralNet(nn.Module):
         self.batch_normalisation = batch_normalisation
         self.use_wandb = use_wandb
         self.out_features_fc1 = out_features_fc1
+        self.init = init
 
         self.pool = nn.MaxPool2d(2, 2)
 
@@ -39,6 +40,7 @@ class ConvNeuralNet(nn.Module):
         elif optimizer == "Adam":
             self.optimizer = optim.Adam(self.parameters(), **optimizer_params)
 
+
     def prepare_layers(self):
         print(self.cnn_params)
         cnn_layers = []
@@ -47,6 +49,8 @@ class ConvNeuralNet(nn.Module):
                 nn.Conv2d(self.cnn_params[i]["in_features"], self.cnn_params[i]["out_features"], self.cnn_params[i]["kernel_size"], 
                     self.cnn_params[i]["stride"], self.cnn_params[i]["padding"])
             )
+            if self.init == "xavier_normal":
+                nn.init.xavier_normal_(cnn_layers[-1].weight)
             cnn_layers.append(self.activation)
             if self.batch_normalisation:
                 cnn_layers.append(nn.BatchNorm2d(self.cnn_params[i]["out_features"]))
@@ -54,7 +58,7 @@ class ConvNeuralNet(nn.Module):
 
         fc_layers = []
         fc_layers.append(
-            nn.Linear(self.cnn_params[4]["out_features"] * 8 * 8, self.out_features_fc1),
+            nn.Linear(self.cnn_params[4]["out_features"] * 11 * 11, self.out_features_fc1),
         )
         if self.batch_normalisation:
             fc_layers.append(
@@ -73,7 +77,7 @@ class ConvNeuralNet(nn.Module):
         
     def forward(self, x):
         x = self.cnn_stack(x)
-        x = x.view(-1, self.cnn_params[4]["out_features"] * 8 * 8)
+        x = x.view(-1, self.cnn_params[4]["out_features"] * 11 * 11)
         x = self.fc_stack(x)
         return x
 
@@ -102,7 +106,7 @@ class ConvNeuralNet(nn.Module):
         print('TRAINING COMPLETE')
         if train_epoch_acc > 30 and val_epoch_acc > 30:
             print("Training and Validation accuracies are greater than 30%.\nSaving model parameters")
-            torch.save(self.state_dict(), "./saved_models/train_{train_epoch_acc:.3f}_val_{val_epoch_acc:.3f}.pth")
+            torch.save(self, "./saved_models/train_{train_epoch_acc:.3f}_val_{val_epoch_acc:.3f}.pth")
 
     def train_loop(self, trainloader):
         self.train()
