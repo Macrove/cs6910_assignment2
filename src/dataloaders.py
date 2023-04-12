@@ -15,7 +15,7 @@ test_dataset_path = os.path.join(dataset_path, "val")
 
 # the training transforms
 train_transform = transforms.Compose([
-    transforms.CenterCrop((400, 400)),
+    transforms.CenterCrop((256, 256)),
     transforms.RandomRotation(degrees=(40, 75)),
     transforms.GaussianBlur(kernel_size=(5, 5), sigma=(0.1, 5)),
     transforms.RandomHorizontalFlip(p=0.5),
@@ -28,7 +28,7 @@ train_transform = transforms.Compose([
 ])
 # the test transforms
 test_transform = transforms.Compose([
-    transforms.CenterCrop((400, 400)),
+    transforms.CenterCrop((256, 256)),
     transforms.ToTensor(),
     transforms.Normalize(
         mean=[0.5, 0.5, 0.5],

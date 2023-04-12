@@ -58,7 +58,7 @@ class ConvNeuralNet(nn.Module):
 
         fc_layers = []
         fc_layers.append(
-            nn.Linear(self.cnn_params[4]["out_features"] * 11 * 11, self.out_features_fc1),
+            nn.Linear(self.cnn_params[4]["out_features"] * 8 * 8, self.out_features_fc1),
         )
         if self.batch_normalisation:
             fc_layers.append(
@@ -77,7 +77,7 @@ class ConvNeuralNet(nn.Module):
         
     def forward(self, x):
         x = self.cnn_stack(x)
-        x = x.view(-1, self.cnn_params[4]["out_features"] * 11 * 11)
+        x = x.view(-1, self.cnn_params[4]["out_features"] * 8 * 8)
         x = self.fc_stack(x)
         return x
 

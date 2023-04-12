@@ -1,5 +1,5 @@
 default_model_params = {
-    "optimizer" : "Adam",
+    "optimizer" : "SGD",
     "epochs" : 10,
     "linear_fc_out_features" : 1024,
     "activation" : "ReLU",
@@ -14,9 +14,8 @@ default_model_params = {
     "init": "xavier"
 }
 
-default_use_wandb = 1
+default_use_wandb = 0
 
-# default_dataset = 'fashion_mnist'
 
 default_credentials = {
     "wandb_project": "cs6910-assignment-2",
@@ -27,8 +26,8 @@ optimizer_param_map = {
     "SGD" : {
         "name": "SGD",
         "default_params": dict(
-            lr = 0.01,
-            momentum= 0.7,
+            lr = 0.001,
+            momentum= 0.9,
             # dampening= 0.1,
             # weight_decay= 1e-3,
             # nestrov= True

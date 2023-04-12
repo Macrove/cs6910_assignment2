@@ -8,5 +8,6 @@ activation_map = {
 }
 
 loss_map = {
-    "cross_entropy": nn.CrossEntropyLoss()
+    "cross_entropy": nn.CrossEntropyLoss(),
+    "squared_error_loss": nn.MSELoss()
 }
