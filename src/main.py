@@ -1,51 +1,12 @@
-import os
-import matplotlib.pyplot as plt
-from utils.env import ZIP_DIR_PATH, ZIP_FILE_NAME, EXTRACT_DIR_NAME
-from utils.prepare_dataset import load_dataset
-from torch.utils.data import DataLoader, random_split
-from torchvision.datasets import ImageFolder
-from torchvision import transforms
+from nn import ConvNeuralNet
+from utils.env import DEVICE
+from dataloaders import train_loader, test_loader, val_loader
 
-def main():
-    dataset_path = os.path.join(ZIP_DIR_PATH + EXTRACT_DIR_NAME)
-
-    train_dataset_path = os.path.join(dataset_path, "train")
-    test_dataset_path = os.path.join(dataset_path, "val")
-
-    transform = transforms.ToTensor()
-
-    train_dataset = ImageFolder(train_dataset_path, transform=transform)
-    test_dataset = ImageFolder(test_dataset_path, transform=transform)
+def main(epochs, activation, cnn_params, out_features_fc1, dropout, loss, learning_rate, optimizer, batch_normalisation, init, use_wandb):
+    model = ConvNeuralNet(cnn_params, out_features_fc1, dropout, loss, learning_rate, 
+                          optimizer["name"], optimizer["default_params"], activation, 
+                          epochs, batch_normalisation, init, DEVICE, use_wandb).to(DEVICE)
+    model.print_description()
+    print(model)
+    model.fit(train_loader, val_loader) 
     
-    img, lbl = train_dataset[100]
-    plt.imshow(img.permute(2,1,0))
-    plt.show()
-    print(lbl)
-
-
-
-
-    
-if __name__ == "__main__":
-    main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
