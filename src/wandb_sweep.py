@@ -31,7 +31,7 @@ def run_sweeps():
     main(epochs, activation, cnn_params, out_features_fc1, dropout, loss, lr, optimizer, batch_normalisation=True, init=init, use_wandb=True)
 
 sweep_configuration = {
-    "name": "Adam Sweep",
+    "name": "SGD Sweep",
     "method": "bayes",
     "metric": {'goal': 'maximize', 'name': 'val_acc'},
     "early_terminate": {
@@ -45,7 +45,7 @@ sweep_configuration = {
         'out_features_fc1': {'values': [256, 512, 1024, 2048]},
         'dropout': {'values': [0.1, 0.2, 0.3, 0.4]},
         'lr': {'min': 0.0001, 'max': 0.5},
-        'optimizer': {'values' :['Adam']},
+        'optimizer': {'values' :['SGD']},
         'beta1': {'min': 0.6, 'max': 0.99},
         'beta2': {'min': 0.7, 'max': 0.9999},
         'momentum': {'values': [1e-1, 1e-2, 1e-3]},
