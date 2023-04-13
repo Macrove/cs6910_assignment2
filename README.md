@@ -71,13 +71,13 @@ NOTE:
 ## User Interface/Scripts that can be run
 | Commands | Functions |
 | --- | --- |
-|```python src/train.py``` | fetches parameters passed by command line and trains the model by calling ```main``` function from ```main.py``` file. This further passes arguments to the model to train it. If the model accuracy is above 30%, the model will get saved. |
-
-|```q4_test_data.py``` | fetches the best model saved(best model name should be present in utils.env) and outputs test accuracy and loss. It then uses the same model to predict sample images and log them as table in wandb. |
-
-| ```python src/q4_wandb_sweep``` | contains sweep configuration details. You can change parameters in ```sweep_configuration``` dict to run and log results and configuration details to wandb. Edit ```count``` argument in ```wandb.agent(sweep_id=sweep_id, function=run_sweeps, count=2)``` to change the number of sweeps you wish to execute. NOTE: Bad parameters, like Batch Normalization - False, have not been kept in sweep configurations in order to reduce runs and hence hyperparameter tuning time |
-    
-| ```python src/PART-B/resnet``` | fetches resnet152 and converts it's last layer to output 10 classes. Fine tunes the model and outputs accuracy and loss on test data. |
+|```python src/train.py``` | fetches parameters passed by command line and trains the model by calling ```main``` function from ```main.py``` file. This        further passes arguments to the model to train it. If the model accuracy is above 30%, the model will get saved |
+| | |
+|```python q4_test_data.py``` | fetches the best model saved(best model name should be present in utils.env) and outputs test accuracy and loss. It then        uses the same model to predict sample images and log them as table in wandb |
+| | |
+| ```python src/q4_wandb_sweep``` | contains sweep configuration details.  NOTE: Bad parameters, like Batch Normalization - False, have not been kept in        sweep configurations in order to reduce runs and hence hyperparameter tuning time |
+| | |
+| ```python src/PART-B/resnet``` | fetches resnet152 and converts it's last layer to output 10 classes. Fine tunes the model and outputs accuracy and loss      on test data |
 
 NOTE: type command ```python src/train.py --help``` for more information about the arguments that can be passed. You should expect output like the one below.
 ```python
