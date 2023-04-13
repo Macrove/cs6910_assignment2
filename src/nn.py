@@ -102,11 +102,11 @@ class ConvNeuralNet(nn.Module):
                     "val_loss" : val_epoch_loss
                 })
             print('_________________________________________________')
+            # if train_epoch_acc > 25 and val_epoch_acc > 25:
+            #     print("Training and Validation accuracies are greater than 30%.\nSaving model parameters")
+            torch.save(self, "train_{train_epoch_acc:.3f}_val_{val_epoch_acc:.3f}.pth")
 
         print('TRAINING COMPLETE')
-        if train_epoch_acc > 30 and val_epoch_acc > 30:
-            print("Training and Validation accuracies are greater than 30%.\nSaving model parameters")
-            torch.save(self, "./saved_models/train_{train_epoch_acc:.3f}_val_{val_epoch_acc:.3f}.pth")
 
     def train_loop(self, trainloader):
         self.train()

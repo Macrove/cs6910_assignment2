@@ -1,6 +1,6 @@
 default_model_params = {
     "optimizer" : "SGD",
-    "epochs" : 10,
+    "epochs" : 20,
     "linear_fc_out_features" : 1024,
     "activation" : "ReLU",
     "loss": "cross_entropy",
@@ -14,7 +14,7 @@ default_model_params = {
     "init": "xavier"
 }
 
-default_use_wandb = 0
+default_use_wandb = 1
 
 
 default_credentials = {
@@ -26,8 +26,8 @@ optimizer_param_map = {
     "SGD" : {
         "name": "SGD",
         "default_params": dict(
-            lr = 0.001,
-            momentum= 0.9,
+            lr = 0.01,
+            momentum= 0.5,
             # dampening= 0.1,
             # weight_decay= 1e-3,
             # nestrov= True

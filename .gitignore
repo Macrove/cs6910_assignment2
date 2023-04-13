@@ -1,5 +1,4 @@
 */dataset
-*.ipynb
 lightning_logs
 **/__pycache__
 wandb
