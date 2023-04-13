@@ -54,6 +54,6 @@ for i in range(10):
     print(labels[i], " : ", value_counts[i])
 print('\n')
 
-train_loader = DataLoader(train_split,8, shuffle=True, num_workers=8, pin_memory=True)
-val_loader = DataLoader(val_split, 8, shuffle=True, num_workers=8, pin_memory=True)
-test_loader = DataLoader(test_dataset, 8, num_workers=8, pin_memory=True)
+train_loader = DataLoader(train_split,8, shuffle=True, num_workers=4, pin_memory=True)
+val_loader = DataLoader(val_split, 8, shuffle=True, num_workers=4, pin_memory=True)
+test_loader = DataLoader(test_dataset, 1, num_workers=4, pin_memory=True)

@@ -190,7 +190,6 @@ class ConvNeuralNet(nn.Module):
     # predicts only for an instance
     def predict(self, x):
         self.eval()
-        print('Test')
         with torch.no_grad():
             image = x.to(self.device)
             # forward pass
