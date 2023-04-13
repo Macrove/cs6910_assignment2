@@ -31,7 +31,7 @@ def run_sweeps():
     main(epochs, activation, cnn_params, out_features_fc1, dropout, loss, lr, optimizer, batch_normalisation=True, init=init, use_wandb=True)
 
 sweep_configuration = {
-    "name": "SGD Sweep",
+    "name": "SGD Sweep2",
     "method": "bayes",
     "metric": {'goal': 'maximize', 'name': 'val_acc'},
     "early_terminate": {
@@ -40,22 +40,22 @@ sweep_configuration = {
         "min_iter": 3
      },
     "parameters": {
-        'epochs': {'values': [8, 9, 10, 11, 12]},
-        'activation': {'values': ["ReLU", "GELU", "SiLU", "Mish"]},
-        'out_features_fc1': {'values': [256, 512, 1024, 2048]},
-        'dropout': {'values': [0.1, 0.2, 0.3, 0.4]},
-        'lr': {'min': 0.0001, 'max': 0.5},
+        'epochs': {'values': [10]},
+        'activation': {'values': ["ReLU"]},
+        'out_features_fc1': {'values': [512]},
+        'dropout': {'values': [0]},
+        'lr': {'min': 0.001, 'max': 0.1},
         'optimizer': {'values' :['SGD']},
-        'beta1': {'min': 0.6, 'max': 0.99},
-        'beta2': {'min': 0.7, 'max': 0.9999},
-        'momentum': {'values': [1e-1, 1e-2, 1e-3]},
+        'beta1': {'min': 0.6, 'max': 0.61},
+        'beta2': {'min': 0.6, 'max': 0.61},
+        'momentum': {'min': 0.5, 'max': 0.9},
         'loss': {'values': ['cross_entropy']},
-        'n_filters': {'values': [32, 64]},
-        'filter_organisation': {'values': [0, 1]},
+        'n_filters': {'values': [64]},
+        'filter_organisation': {'values': [1]},
         'kernel_size': {'values': [2]}
     }
 }
 
 
 sweep_id = wandb.sweep(sweep=sweep_configuration, project="cs6910-assignment-2", entity="me19b110")
-wandb.agent(sweep_id=sweep_id, function=run_sweeps, count=15)
+wandb.agent(sweep_id=sweep_id, function=run_sweeps, count=10)
