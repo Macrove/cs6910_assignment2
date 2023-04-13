@@ -1,5 +1,4 @@
 import torch
-import torchvision
 from dataloaders import train_loader, val_loader, test_loader
 from tqdm import tqdm
 DEVICE = 'cuda' if torch.cuda.is_available() else 'gpu'
@@ -24,7 +23,7 @@ loss_fn = torch.nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.fc.parameters(), lr=0.001)
 
 model.to(DEVICE)
-n_epochs = 10
+n_epochs = 20
 for epoch in range(n_epochs):
     # Train
     model.train()
