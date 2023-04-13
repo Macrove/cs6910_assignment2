@@ -1,7 +1,7 @@
 # Assignment Repository for CS6910
 
 This repository contains all the code related to assignment 2 of cs6910.<br>
-All the code for PART-B is in ```PART-B``` folder
+All the code for PART-B is in ```PART-B``` folder.<bt>
 
 ## API Reference
 
@@ -68,17 +68,48 @@ NOTE:
     Adam: torch.optim.Adam()
 ```
 
-## User Interface
+## User Interface/Scripts that can be run
 | Commands | Functions |
 | --- | --- |
 |```python src/train.py``` | fetches parameters passed by command line and trains the model by calling ```main``` function from ```main.py``` file. This further passes arguments to the model to train it. If the model accuracy is above 30%, the model will get saved. 
 
-|```q4_test_data.py``` | fetches the best model saved(best model name should be present in utils.env) and outputs test accuracy and loss. It can be configured to output 10x3 grid of sample predictions of each class.
+|```q4_test_data.py``` | fetches the best model saved(best model name should be present in utils.env) and outputs test accuracy and loss. It then uses the same model to predict sample images and log them as table in wandb
 
 | ```python src/q4_wandb_sweep``` | contains sweep configuration details. You can change parameters in ```sweep_configuration``` dict to run and log results and configuration details to wandb. Edit ```count``` argument in ```wandb.agent(sweep_id=sweep_id, function=run_sweeps, count=2)``` to change the number of sweeps you wish to execute. NOTE: Bad parameters, like Batch Normalization - False, have not been kept in sweep configurations in order to reduce runs and hence hyperparameter tuning time |
+    
+| ```python src/PART-B/resnet``` | fetches resnet152 and converts it's last layer to output 10 classes. Fine tunes the model and outputs accuracy and loss on test data. |
 
+NOTE: type command ```python src/train.py --help``` for more information about the arguments that can be passed. You should expect output like the one below.
+```python
+    usage: train [-h] [-wp {cs6910-assignment-2}] [-we {me19b110}] [-nf N_FILTERS] [-fo {0,1,2}] [-ks KERNEL_SIZE] [-st STRIDE] [-pd PADDING] [-e EPOCHS] [-dr DROPOUT]
+             [-l {cross_entropy, squared_error_loss}] [-o {SGD, Adam}] [-lr LR] [-m MOMENTUM] [-bt BETAS] [-sz LINEAR_FC_OUT_FEATURES] [-a {ReLU,SiLU,GELU,Mish}]
+             [-wb {0,1}] [-bn {0,1}]
 
-## Arguments Supported
+Suppy parameters to convolution neural network to run and log results in wandb.ai
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -wp {cs6910-assignment-2}, --wandb_project {cs6910-assignment-2}
+  -we {me19b110}, --wandb_entity {me19b110}
+  -nf N_FILTERS, --n_filters N_FILTERS
+  -fo {0,1,2}, --filter_organisation {0,1,2}
+  -ks KERNEL_SIZE, --kernel_size KERNEL_SIZE
+  -st STRIDE, --stride STRIDE
+  -pd PADDING, --padding PADDING
+  -e EPOCHS, --epochs EPOCHS
+  -dr DROPOUT, --dropout DROPOUT
+  -l {cross_entropy, squared_error_loss}, --loss {cross_entropy, squared_error_loss}
+  -o {SGD, Adam}, --optimizer {SGD, Adam}
+  -lr LR, --lr LR
+  -m MOMENTUM, --momentum MOMENTUM
+  -bt BETAS, --betas BETAS
+  -sz LINEAR_FC_OUT_FEATURES, --linear_fc_out_features LINEAR_FC_OUT_FEATURES
+  -a {ReLU,SiLU,GELU,Mish}, --activation {ReLU,SiLU,GELU,Mish}
+  -wb {0,1}, --use_wandb {0,1}
+  -bn {0,1}, --batch_normalisation {0,1}
+```
+    
+## Default arguments and Description
 
 | Name | Default Value | Description |
 | --- | --- | --- |
