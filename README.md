@@ -71,9 +71,9 @@ NOTE:
 ## User Interface/Scripts that can be run
 | Commands | Functions |
 | --- | --- |
-|```python src/train.py``` | fetches parameters passed by command line and trains the model by calling ```main``` function from ```main.py``` file. This further passes arguments to the model to train it. If the model accuracy is above 30%, the model will get saved. 
+|```python src/train.py``` | fetches parameters passed by command line and trains the model by calling ```main``` function from ```main.py``` file. This further passes arguments to the model to train it. If the model accuracy is above 30%, the model will get saved. |
 
-|```q4_test_data.py``` | fetches the best model saved(best model name should be present in utils.env) and outputs test accuracy and loss. It then uses the same model to predict sample images and log them as table in wandb
+|```q4_test_data.py``` | fetches the best model saved(best model name should be present in utils.env) and outputs test accuracy and loss. It then uses the same model to predict sample images and log them as table in wandb. |
 
 | ```python src/q4_wandb_sweep``` | contains sweep configuration details. You can change parameters in ```sweep_configuration``` dict to run and log results and configuration details to wandb. Edit ```count``` argument in ```wandb.agent(sweep_id=sweep_id, function=run_sweeps, count=2)``` to change the number of sweeps you wish to execute. NOTE: Bad parameters, like Batch Normalization - False, have not been kept in sweep configurations in order to reduce runs and hence hyperparameter tuning time |
     
